@@ -1,4 +1,4 @@
-import { getRandomInt, getRandomArrayElement } from './util';
+import { getRandomInt, getRandomArrayElement } from './util.js';
 
 const PHOTO_COUNT = 25;
 
@@ -12,7 +12,7 @@ const LikesRange = {
 const MessageID = {
   MIN: 1,
   MAX: 999,
-};
+}
 
 const Avatar = {
   MIN: 1,
@@ -26,7 +26,7 @@ const photoDescriptions = [
   'Пусть будет',
   'На новый фотоаппарат',
   'Горизонт не завален',
-];
+]
 
 const messages = [
   'Всё отлично!',
@@ -35,7 +35,7 @@ const messages = [
   'Моя бабушка случайно чихнула с фотоаппаратом в руках и у неё получилась фотография лучше.',
   'Я поскользнулся на банановой кожуре и уронил фотоаппарат на кота и у меня получилась фотография лучше.',
   'Лица у людей на фотке перекошены, как будто их избивают. Как можно было поймать такой неудачный момент?!',
-];
+]
 
 const names = [
   'Артём',
@@ -44,7 +44,7 @@ const names = [
   'Валерия',
   'Влад',
   'Юлька',
-];
+]
 
 const getComments = () => {
   const array = [];
@@ -61,12 +61,12 @@ const getComments = () => {
     array.push(element);
   }
   return array;
-};
+}
 
 const getPhotos = () => {
-  const photos = [];
+  const array = [];
   for (let i = 0; i < PHOTO_COUNT; i++) {
-    photos.push({
+    array.push({
       id: i + 1,
       url: `photos/${i + 1}.jpg`,
       description: getRandomArrayElement(photoDescriptions),
@@ -74,6 +74,7 @@ const getPhotos = () => {
       comments: getComments(),
     });
   }
-};
+  return array;
+}
 
-export default getPhotos;
+export { getPhotos };

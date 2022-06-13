@@ -8,15 +8,15 @@ const getRandomInt = (min, max) => {
     [min, max] = [max, min];
   }
   return Math.floor(Math.random() * (max - min + 1)) + min;
-};
+}
 
 const getMessageLength = (message, maxLength) => {
   return message.length <= maxLength;
-};
+}
 
 const getRandomArrayElement = (array) => {
   let i = getRandomInt(0, array.length - 1);
   return array[i];
-};
+}
 
 export {getRandomInt, getMessageLength, getRandomArrayElement};
