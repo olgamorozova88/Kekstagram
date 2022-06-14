@@ -1,5 +1,7 @@
 import { getRandomInt, getRandomArrayElement } from './util.js';
 
+const photos = [];
+
 const PHOTO_COUNT = 25;
 
 const arrayLength = 3;
@@ -64,9 +66,8 @@ const getComments = () => {
 }
 
 const getPhotos = () => {
-  const array = [];
   for (let i = 0; i < PHOTO_COUNT; i++) {
-    array.push({
+    photos.push({
       id: i + 1,
       url: `photos/${i + 1}.jpg`,
       description: getRandomArrayElement(photoDescriptions),
@@ -74,7 +75,9 @@ const getPhotos = () => {
       comments: getComments(),
     });
   }
-  return array;
+  return photos;
 }
 
-export { getPhotos };
+getPhotos();
+
+export { photos };

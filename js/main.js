@@ -1,2 +1,2 @@
-import { getPhotos } from './modules/data.js';
-getPhotos();
+import { renderPictures } from './modules/render-photos.js';
+renderPictures();
