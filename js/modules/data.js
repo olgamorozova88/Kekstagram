@@ -4,7 +4,7 @@ const photos = [];
 
 const PHOTO_COUNT = 25;
 
-const arrayLength = 3;
+/* const arrayLength = 3; */
 
 const LikesRange = {
   MIN: 15,
@@ -50,10 +50,11 @@ const names = [
 
 const getComments = () => {
   const array = [];
+  const arrayLength = getRandomInt(3, 8);
   while (array.length !== arrayLength) {
     let element = {
       id: getRandomInt(MessageID.MIN, MessageID.MAX),
-      avatar: `img/avatr-${getRandomInt(Avatar.MIN, Avatar.MAX)}.svg`,
+      avatar: `img/avatar-${getRandomInt(Avatar.MIN, Avatar.MAX)}.svg`,
       message: getRandomArrayElement(messages),
       name: getRandomArrayElement(names),
     };
