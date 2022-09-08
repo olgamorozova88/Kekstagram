@@ -13,7 +13,6 @@ const createComment = (comment) => {
   similarComment.querySelector('.social__picture').src = comment.avatar;
   similarComment.querySelector('.social__picture').alt = comment.name;
   similarComment.querySelector('.social__text').textContent = comment.message;
-
   return similarComment;
 }
 
