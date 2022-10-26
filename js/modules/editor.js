@@ -1,3 +1,5 @@
+import { setDefaultEffect, onEffectToggle } from'./add-effect.js';
+
 const Keys = {
   ESC: 'Esc',
   ESCAPE: 'Escape',
@@ -19,20 +21,6 @@ const scaleUp = imagePreview.querySelector('.scale__control--bigger');
 const scaleDown = imagePreview.querySelector('.scale__control--smaller');
 
 
-const onImagePreviewCloseButtonClick = () => {
-  imagePreview.classList.add('hidden');
-  imageUploadField.value = '';
-  imagePreviewClose.removeEventListener('click', onImagePreviewCloseButtonClick);
-  document.removeEventListener('keydown', onEscKeyPress);
-};
-
-const onEscKeyPress = (evt) => {
-  if ((evt.key === Keys.ECS && document.activeElement !== hashtagInput)  || (evt.key === Keys.ESCAPE && document.activeElement !== hashtagInput)) {
-    imagePreview.classList.add('hidden');
-    imageUploadField.value = '';
-  }
-};
-
 const onScaleUpButtonClick = () => {
   let scaleValue = parseInt(scaleInput.value) + SCALE.STEP;
   if (scaleValue >= 100) {
@@ -51,6 +39,25 @@ const onScaleDownButtonClick = () => {
   imageUploaded.style.transform = `scale(${scaleValue / 100})`;
 };
 
+const onImagePreviewCloseButtonClick = () => {
+  imagePreview.classList.add('hidden');
+  imageUploadField.value = '';
+  imagePreviewClose.removeEventListener('click', onImagePreviewCloseButtonClick);
+  scaleUp.removeEventListener('click', onScaleUpButtonClick);
+  scaleDown.removeEventListener('click', onScaleDownButtonClick);
+  document.removeEventListener('keydown', onEscKeyPress);
+};
+
+const onEscKeyPress = (evt) => {
+  if ((evt.key === Keys.ECS && document.activeElement !== hashtagInput)  || (evt.key === Keys.ESCAPE && document.activeElement !== hashtagInput)) {
+    imagePreview.classList.add('hidden');
+    imageUploadField.value = '';
+    imagePreviewClose.removeEventListener('click', onImagePreviewCloseButtonClick);
+    scaleUp.removeEventListener('click', onScaleUpButtonClick);
+    scaleDown.removeEventListener('click', onScaleDownButtonClick);
+    document.removeEventListener('keydown', onEscKeyPress);
+  }
+};
 
 const onImageUpload = () => {
   imagePreview.classList.remove('hidden');
@@ -59,6 +66,8 @@ const onImageUpload = () => {
   scaleInput.value = SCALE.MAX + '%';
   scaleUp.addEventListener('click', onScaleUpButtonClick);
   scaleDown.addEventListener('click', onScaleDownButtonClick);
+  setDefaultEffect();
+  onEffectToggle();
 };
 
 imageUploadField.addEventListener('change', onImageUpload);
