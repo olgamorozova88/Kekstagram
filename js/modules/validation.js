@@ -1,11 +1,11 @@
-import { hashtagInput, commentInput } from "./editor.js";
+import { hashtagInput, commentInput } from './editor.js';
 
 const COMMENT_MAX_LENGHT = 140;
 
 const HashtagSettings = {
   COUNT: 5,
   MAXLENGTH: 20,
-  PATTERN: /\#[a-zA-Zа-яА-Я0-9]+$/,
+  PATTERN: /#[a-zA-Zа-яА-Я0-9]+$/,
 }
 
 const setRedBorder = (element) => {
@@ -35,7 +35,7 @@ const checkHashtagValidity = () => {
     return;
   }
 
-  if (hashtagInputValue.match(/[a-zA-Zа-яА-Я0-9]+\#/g)) {
+  if (hashtagInputValue.match(/[a-zA-Zа-яА-Я0-9]+#/g)) {
     hashtagInput.setCustomValidity('Хэштеги должны разделяться пробелами');
     setRedBorder(hashtagInput);
   }
