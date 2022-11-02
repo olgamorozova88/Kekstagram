@@ -1,4 +1,5 @@
 import { setDefaultEffect, onEffectToggle } from'./add-effect.js';
+import { checkHashtagValidity, checkCommentValidity } from './validation.js';
 
 const Keys = {
   ESC: 'Esc',
@@ -14,6 +15,7 @@ const SCALE = {
 const imageUploadField = document.querySelector('#upload-file');
 const imagePreview = document.querySelector('.img-upload__overlay');
 const hashtagInput = imagePreview.querySelector('.text__hashtags');
+const commentInput = imagePreview.querySelector('.text__description')
 const imagePreviewClose = imagePreview.querySelector('.img-upload__cancel');
 const imageUploaded = imagePreview.querySelector('.img-upload__preview > img');
 const scaleInput = imagePreview.querySelector('.scale__control--value');
@@ -42,20 +44,28 @@ const onScaleDownButtonClick = () => {
 const onImagePreviewCloseButtonClick = () => {
   imagePreview.classList.add('hidden');
   imageUploadField.value = '';
+  imageUploaded.removeAttribute('class');
+  imageUploaded.removeAttribute('style');
   imagePreviewClose.removeEventListener('click', onImagePreviewCloseButtonClick);
   scaleUp.removeEventListener('click', onScaleUpButtonClick);
   scaleDown.removeEventListener('click', onScaleDownButtonClick);
   document.removeEventListener('keydown', onEscKeyPress);
+  hashtagInput.removeEventListener('input', checkHashtagValidity);
+  commentInput.removeEventListener('input', checkCommentValidity);
 };
 
 const onEscKeyPress = (evt) => {
-  if ((evt.key === Keys.ECS && document.activeElement !== hashtagInput)  || (evt.key === Keys.ESCAPE && document.activeElement !== hashtagInput)) {
+  if ((evt.key === Keys.ECS && document.activeElement !== hashtagInput && document.activeElement !== commentInput)  || (evt.key === Keys.ESCAPE && document.activeElement !== hashtagInput && document.activeElement !== commentInput)) {
     imagePreview.classList.add('hidden');
     imageUploadField.value = '';
+    imageUploaded.removeAttribute('class');
+    imageUploaded.removeAttribute('style');
     imagePreviewClose.removeEventListener('click', onImagePreviewCloseButtonClick);
     scaleUp.removeEventListener('click', onScaleUpButtonClick);
     scaleDown.removeEventListener('click', onScaleDownButtonClick);
     document.removeEventListener('keydown', onEscKeyPress);
+    hashtagInput.removeEventListener('input', checkHashtagValidity);
+    commentInput.removeEventListener('input', checkCommentValidity);
   }
 };
 
@@ -68,9 +78,13 @@ const onImageUpload = () => {
   scaleDown.addEventListener('click', onScaleDownButtonClick);
   setDefaultEffect();
   onEffectToggle();
+  hashtagInput.addEventListener('input', checkHashtagValidity);
+  commentInput.addEventListener('input', checkCommentValidity);
 };
 
 imageUploadField.addEventListener('change', onImageUpload);
+
+export {imagePreview, hashtagInput, commentInput};
 
 
 
