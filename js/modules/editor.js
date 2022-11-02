@@ -84,7 +84,7 @@ const onImageUpload = () => {
 
 imageUploadField.addEventListener('change', onImageUpload);
 
-export {imagePreview, hashtagInput, commentInput};
+export { imagePreview, imageUploaded, hashtagInput, commentInput };
 
 
 
