@@ -4,6 +4,16 @@ const successNotificationTemplate = document.querySelector('#success').content.q
 const errorNotificationTemplate = document.querySelector('#error').content.querySelector('.error');
 let notification = '';
 
+const clearBodyListeners = () => {
+  document.removeEventListener('click', onDocumentClickClose);
+  document.removeEventListener('keydown', onEscPressClose);
+}
+
+const removeNotification = () =>{
+  body.removeChild(notification);
+  clearBodyListeners();
+}
+
 const onEscPressClose = () => {
   if (isEscKeyPressed) {
     removeNotification();
@@ -14,16 +24,6 @@ const onDocumentClickClose = (evt) => {
   if (evt.target === notification) {
     removeNotification();
   }
-}
-
-const clearBodyListeners = () => {
-  document.removeEventListener('click', onDocumentClickClose);
-  document.removeEventListener('keydown', onEscPressClose);
-}
-
-const removeNotification = () =>{
-  body.removeChild(notification);
-  clearBodyListeners();
 }
 
 const serverError = () => {
