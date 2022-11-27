@@ -6,6 +6,7 @@ const HashtagSettings = {
   COUNT: 5,
   MAXLENGTH: 20,
   PATTERN: /#[a-zA-Zа-яА-Я0-9]+$/,
+  PATTERN_NO_SPACE: /[a-zA-Zа-яА-Я0-9]+#[a-zA-Zа-яА-Я0-9]/g,
 }
 
 const setRedBorder = (element) => {
@@ -35,13 +36,11 @@ const checkHashtagValidity = () => {
     return;
   }
 
-  if (hashtagInputValue.match(/[a-zA-Zа-яА-Я0-9]+#/g)) {
-    hashtagInput.setCustomValidity('Хэштеги должны разделяться пробелами');
-    setRedBorder(hashtagInput);
-  }
-
   hashtags.forEach((hashtag, index, arr) => {
-    if (!hashtag.startsWith('#', 0)) {
+    if (hashtag.match(HashtagSettings.PATTERN_NO_SPACE)) {
+      hashtagInput.setCustomValidity('Хэштеги должны разделяться пробелами');
+      setRedBorder(hashtagInput);
+    } else if (!hashtag.startsWith('#', 0)) {
       hashtagInput.setCustomValidity('Хэштег должен начинаться с #');
       setRedBorder(hashtagInput);
     } else if (hashtag.length > HashtagSettings.MAXLENGTH) {
@@ -70,8 +69,9 @@ const checkHashtagValidity = () => {
 const checkCommentValidity = () => {
   commentInput.removeAttribute('maxlength');
   const commentLength = commentInput.value.length;
+  const extraSymbols = commentLength - COMMENT_MAX_LENGHT;
   if (commentLength > COMMENT_MAX_LENGHT) {
-    commentInput.setCustomValidity(`Комментарий не может быть длинее 140 символов. Лишних символов - ${commentLength - COMMENT_MAX_LENGHT}`);
+    commentInput.setCustomValidity(`Комментарий не может быть длинее 140 символов. Лишних символов - ${extraSymbols}`);
     setRedBorder(commentInput);
   } else {
     commentInput.setCustomValidity('');

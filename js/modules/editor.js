@@ -1,10 +1,8 @@
 import { setDefaultEffect, onEffectToggle } from'./add-effect.js';
 import { checkHashtagValidity, checkCommentValidity } from './validation.js';
-
-const Keys = {
-  ESC: 'Esc',
-  ESCAPE: 'Escape',
-};
+import { isEscKeyPressed } from './util.js';
+import { sendData } from './api.js';
+import { onSuccess, onError } from './alerts.js'
 
 const SCALE = {
   MIN: 25,
@@ -15,13 +13,22 @@ const SCALE = {
 const imageUploadField = document.querySelector('#upload-file');
 const imagePreview = document.querySelector('.img-upload__overlay');
 const hashtagInput = imagePreview.querySelector('.text__hashtags');
-const commentInput = imagePreview.querySelector('.text__description')
+const commentInput = imagePreview.querySelector('.text__description');
 const imagePreviewClose = imagePreview.querySelector('.img-upload__cancel');
 const imageUploaded = imagePreview.querySelector('.img-upload__preview > img');
 const scaleInput = imagePreview.querySelector('.scale__control--value');
 const scaleUp = imagePreview.querySelector('.scale__control--bigger');
 const scaleDown = imagePreview.querySelector('.scale__control--smaller');
+const form = document.querySelector('#upload-select-image');
 
+const setUploadedFilePreview = () => {
+  const fileReader = new FileReader();
+  const file = imageUploadField.files[0];
+  fileReader.readAsDataURL(file);
+  fileReader.onloadend = () => {
+    imageUploaded.src = fileReader.result;
+  }
+}
 
 const onScaleUpButtonClick = () => {
   let scaleValue = parseInt(scaleInput.value) + SCALE.STEP;
@@ -41,35 +48,45 @@ const onScaleDownButtonClick = () => {
   imageUploaded.style.transform = `scale(${scaleValue / 100})`;
 };
 
-const onImagePreviewCloseButtonClick = () => {
-  imagePreview.classList.add('hidden');
-  imageUploadField.value = '';
+const closeEditor = () => {
   imageUploaded.removeAttribute('class');
   imageUploaded.removeAttribute('style');
+  imagePreview.classList.add('hidden');
+}
+
+const resetForm = () => {
+  imageUploadField.value = '';
+  scaleInput.value = `${SCALE.MAX}%`;
+  hashtagInput.value = '';
+  commentInput.value = '';
+  setDefaultEffect();
+}
+
+const clearFormEventListeners = () => {
   imagePreviewClose.removeEventListener('click', onImagePreviewCloseButtonClick);
   scaleUp.removeEventListener('click', onScaleUpButtonClick);
   scaleDown.removeEventListener('click', onScaleDownButtonClick);
   document.removeEventListener('keydown', onEscKeyPress);
   hashtagInput.removeEventListener('input', checkHashtagValidity);
   commentInput.removeEventListener('input', checkCommentValidity);
+}
+
+const onImagePreviewCloseButtonClick = () => {
+  closeEditor();
+  resetForm();
+  clearFormEventListeners()
 };
 
-const onEscKeyPress = (evt) => {
-  if ((evt.key === Keys.ECS && document.activeElement !== hashtagInput && document.activeElement !== commentInput)  || (evt.key === Keys.ESCAPE && document.activeElement !== hashtagInput && document.activeElement !== commentInput)) {
-    imagePreview.classList.add('hidden');
-    imageUploadField.value = '';
-    imageUploaded.removeAttribute('class');
-    imageUploaded.removeAttribute('style');
-    imagePreviewClose.removeEventListener('click', onImagePreviewCloseButtonClick);
-    scaleUp.removeEventListener('click', onScaleUpButtonClick);
-    scaleDown.removeEventListener('click', onScaleDownButtonClick);
-    document.removeEventListener('keydown', onEscKeyPress);
-    hashtagInput.removeEventListener('input', checkHashtagValidity);
-    commentInput.removeEventListener('input', checkCommentValidity);
+const onEscKeyPress = () => {
+  if (isEscKeyPressed && document.activeElement !== hashtagInput && document.activeElement !== commentInput) {
+    closeEditor();
+    resetForm();
+    clearFormEventListeners()
   }
 };
 
 const onImageUpload = () => {
+  setUploadedFilePreview();
   imagePreview.classList.remove('hidden');
   imagePreviewClose.addEventListener('click', onImagePreviewCloseButtonClick);
   document.addEventListener('keydown', onEscKeyPress);
@@ -83,6 +100,18 @@ const onImageUpload = () => {
 };
 
 imageUploadField.addEventListener('change', onImageUpload);
+
+const setFormSubmit = (success, error) => {
+  form.addEventListener('submit', (evt) => {
+    evt.preventDefault();
+    sendData(evt.target, success, error);
+    closeEditor();
+    resetForm();
+    clearFormEventListeners();
+  })
+}
+
+setFormSubmit(onSuccess, onError);
 
 export { imagePreview, imageUploaded, hashtagInput, commentInput };
 

@@ -1,3 +1,12 @@
+const Keys = {
+  ESC: 'Esc',
+  ESCAPE: 'Escape',
+};
+
+const isEscKeyPressed = (evt) => {
+  return evt.key === Keys.ECS || evt.key === Keys.ESCAPE
+}
+
 const getRandomInt = (min, max) => {
   min = Math.ceil(min);
   max = Math.floor(max);
@@ -19,4 +28,4 @@ const getRandomArrayElement = (array) => {
   return array[i];
 }
 
-export {getRandomInt, getMessageLength, getRandomArrayElement};
+export {getRandomInt, getMessageLength, getRandomArrayElement, isEscKeyPressed};
