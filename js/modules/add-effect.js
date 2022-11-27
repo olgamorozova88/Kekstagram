@@ -102,11 +102,12 @@ const setEffect = (effect) => {
       imageUploaded.className = `effects__preview--${effect.value}`;
       effectLevelField.classList.remove('visually-hidden');
       setRange(effect);
-      effectLevelSlider.noUiSlider.on('update', (values, handle) => {
-        effectLevelInput.value = values[handle];
-        setFilter(effect.value, effectLevelInput.value);
-      });
+      effectLevelInput.setAttribute('step', EFFECTS[effect.value].STEP);
     }
+    effectLevelSlider.noUiSlider.on('update', (values, handle) => {
+      effectLevelInput.value = values[handle];
+      setFilter(effect.value, effectLevelInput.value);
+    });
   }
 }
 
