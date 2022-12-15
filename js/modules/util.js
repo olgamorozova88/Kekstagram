@@ -28,4 +28,23 @@ const getRandomArrayElement = (array) => {
   return array[i];
 }
 
-export {getRandomInt, getMessageLength, getRandomArrayElement, isEscKeyPressed};
+const shuffle = (array) => {
+  for (let i = array.length - 1; i > 0; i--) {
+    let j = Math.floor(Math.random() * (i + 1));
+    [array[i], array[j]] = [array[j], array[i]];
+  }
+  return array;
+}
+
+const debounce = (fn, ms) => {
+  let timeout;
+  return function () {
+    const fnCall = () => {
+      fn.apply(this, arguments)
+    }
+    clearTimeout(timeout);
+    timeout = setTimeout(fnCall, ms)
+  };
+}
+
+export { getRandomInt, getMessageLength, getRandomArrayElement, isEscKeyPressed, shuffle, debounce };

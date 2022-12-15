@@ -10,6 +10,8 @@ const SCALE = {
   STEP: 25,
 };
 
+const FILE_TYPES = ['jpg', 'jpeg', 'png'];
+
 const imageUploadField = document.querySelector('#upload-file');
 const imagePreview = document.querySelector('.img-upload__overlay');
 const hashtagInput = imagePreview.querySelector('.text__hashtags');
@@ -22,11 +24,17 @@ const scaleDown = imagePreview.querySelector('.scale__control--smaller');
 const form = document.querySelector('#upload-select-image');
 
 const setUploadedFilePreview = () => {
-  const fileReader = new FileReader();
   const file = imageUploadField.files[0];
-  fileReader.readAsDataURL(file);
-  fileReader.onloadend = () => {
-    imageUploaded.src = fileReader.result;
+  const fileName = file.name.toLowerCase();
+  const matches = FILE_TYPES.some((it) => {
+    return fileName.endsWith(it);
+  });
+  if (matches) {
+    const fileReader = new FileReader();
+    fileReader.readAsDataURL(file);
+    fileReader.addEventListener('load', () => {
+      imageUploaded.src = fileReader.result;
+    });
   }
 }
 
@@ -55,10 +63,8 @@ const closeEditor = () => {
 }
 
 const resetForm = () => {
-  imageUploadField.value = '';
+  form.reset();
   scaleInput.value = `${SCALE.MAX}%`;
-  hashtagInput.value = '';
-  commentInput.value = '';
   setDefaultEffect();
 }
 
@@ -99,8 +105,6 @@ const onImageUpload = () => {
   commentInput.addEventListener('input', checkCommentValidity);
 };
 
-imageUploadField.addEventListener('change', onImageUpload);
-
 const setFormSubmit = (success, error) => {
   form.addEventListener('submit', (evt) => {
     evt.preventDefault();
@@ -111,6 +115,7 @@ const setFormSubmit = (success, error) => {
   })
 }
 
+imageUploadField.addEventListener('change', onImageUpload);
 setFormSubmit(onSuccess, onError);
 
 export { imagePreview, imageUploaded, hashtagInput, commentInput };

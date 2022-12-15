@@ -18,4 +18,9 @@ const renderPhotos = (photos) => {
   pictures.appendChild(photoPreviews);
 }
 
-export {renderPhotos}
+const clearPhotos = () => {
+  const photos = document.querySelectorAll('.picture');
+  photos.forEach(photo => photo.remove());
+}
+
+export { renderPhotos, clearPhotos }
