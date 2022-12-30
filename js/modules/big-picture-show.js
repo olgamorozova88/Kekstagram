@@ -1,31 +1,54 @@
 import { isEscKeyPressed } from './util.js';
 
+const COMMENTS_COUNT_STEP = 5;
+
+let commentsCount = COMMENTS_COUNT_STEP;
+
 const pageBody = document.querySelector('body');
 const bigPhoto = document.querySelector('.big-picture');
 const bigPhotoClose = bigPhoto.querySelector('.big-picture__cancel');
 const commentsList = bigPhoto.querySelector('.social__comments');
-const commentsShown = bigPhoto.querySelector('.social__comment-count');
-const commentsTotalCount = bigPhoto.querySelector('.comments-count');
-const showMoreCommentsBtn = bigPhoto.querySelector('.comments-loader')
+const commentsShownCount = bigPhoto.querySelector('.social__comment-count');
+const showMoreCommentsBtn = bigPhoto.querySelector('.comments-loader');
 const commentTemplate = document.querySelector('#comment').content.querySelector('.social__comment');
 
+const commentsCountReset = () => {
+  commentsCount = COMMENTS_COUNT_STEP;
+}
+const createComment = (comment) => {
+  const similarComment = commentTemplate.cloneNode(true);
+  similarComment.querySelector('.social__picture').src = comment.avatar;
+  similarComment.querySelector('.social__picture').alt = comment.name;
+  similarComment.querySelector('.social__text').textContent = comment.message;
+  return similarComment;
+}
+
+const onShowMoreCommentsBtnClick = (comments) => {
+  return () => renderComments(comments);
+}
+
 const renderComments = (comments) => {
-  commentsList.innerHTML = '';
+  commentsCount = (comments.length > commentsCount) ? commentsCount : comments.length;
+  const commentsToShow = comments.slice(0, commentsCount);
+  commentsShownCount.textContent = `${commentsCount} из ${comments.length} комментариев`;
   const commentsFragment = document.createDocumentFragment();
-  comments.forEach(comment => {
-    const similarComment = commentTemplate.cloneNode(true);
-    similarComment.querySelector('.social__picture').src = comment.avatar;
-    similarComment.querySelector('.social__picture').alt = comment.name;
-    similarComment.querySelector('.social__text').textContent = comment.message;
-    commentsFragment.appendChild(similarComment);
+  commentsToShow.forEach(comment => {
+    commentsFragment.append(createComment(comment));
   });
-  commentsList.appendChild(commentsFragment);
-  commentsTotalCount.textContent = comments.length;
-  if (comments.length <= 5) {
-    commentsShown.classList.add('hidden');
+  commentsList.innerHTML ='';
+  commentsList.append(commentsFragment);
+  if (commentsCount === comments.length) {
     showMoreCommentsBtn.classList.add('hidden');
-    commentsTotalCount.textContent = 125;
+  } else {
+    showMoreCommentsBtn.classList.remove('hidden');
+    showMoreCommentsBtn.addEventListener('click', onShowMoreCommentsBtnClick(comments), {once: true});
   }
+  commentsCount += COMMENTS_COUNT_STEP;
+}
+
+const showComments = (comments) => {
+  const commentsLoaded = comments.slice();
+  renderComments(commentsLoaded);
 }
 
 const onBigPhotoCloseClick = () => {
@@ -34,19 +57,12 @@ const onBigPhotoCloseClick = () => {
   bigPhotoClose.removeEventListener('click', onBigPhotoCloseClick);
   document.removeEventListener('keydown', onEscKeyPress);
   commentsList.innerHTML = '';
-  if (commentsShown.classList.contains('hidden') && showMoreCommentsBtn.classList.contains('hidden')) {
-    commentsShown.classList.remove('hidden');
-    showMoreCommentsBtn.classList.remove('hidden');
-  }
-  commentsTotalCount.textContent = 125;
+  commentsCountReset();
 }
 
 const onEscKeyPress = () => {
   if (isEscKeyPressed) {
-    pageBody.classList.remove('modal-open');
-    bigPhoto.classList.add('hidden');
-    bigPhotoClose.removeEventListener('click', onBigPhotoCloseClick);
-    commentsList.innerHTML = '';
+    onBigPhotoCloseClick();
   }
 }
 
@@ -55,7 +71,7 @@ const showBigPicture = (photo) => {
   bigPhoto.querySelector('.big-picture__img > img').src = photo.url;
   bigPhoto.querySelector('.likes-count').textContent = photo.likes;
   bigPhoto.querySelector('.social__caption').textContent = photo.description;
-  renderComments(photo.comments);
+  showComments(photo.comments);
   bigPhotoClose.addEventListener('click', onBigPhotoCloseClick);
   document.addEventListener('keydown', onEscKeyPress);
   bigPhoto.classList.remove('hidden');
