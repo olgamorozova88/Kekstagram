@@ -1,4 +1,4 @@
-import { setDefaultEffect, onEffectToggle } from'./add-effect.js';
+import { setDefaultEffect, onEffectToggle } from './add-effect.js';
 import { checkHashtagValidity, checkCommentValidity } from './validation.js';
 import { isEscKeyPressed } from './util.js';
 import { sendData } from './api.js';
