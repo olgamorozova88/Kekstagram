@@ -91,11 +91,7 @@ const setDefaultEffect = () => {
 }
 
 const setFilter = (filter, level) => {
-  if (filter === 'none') {
-    imageUploaded.style.filter = '';
-  } else {
-    imageUploaded.style.filter = `${EFFECTS[filter].FILTER}(${level}${EFFECTS[filter].MEASURE})`
-  }
+  imageUploaded.style.filter = `${EFFECTS[filter].FILTER}(${level}${EFFECTS[filter].MEASURE})`
 }
 
 const setEffect = (effect) => {
